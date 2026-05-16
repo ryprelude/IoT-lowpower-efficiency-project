@@ -1,0 +1,5 @@
+algorithm,data_size,clock_ticks,repeat
+ASCON,16,12,100
+ASCON,64,49,100
+AES-GCM,16,4,100
+AES-GCM,64,17,100

@@ -1,0 +1,4 @@
+33:56:37.018	ID:3	[INFO: CRYPTO    ] ASCON 16bytes clock ticks (x100): 12
+33:56:37.409	ID:3	[INFO: CRYPTO    ] ASCON 64bytes clock ticks (x100): 49
+33:56:37.448	ID:3	[INFO: CRYPTO    ] AESGCM 16bytes clock ticks (x100): 4
+33:56:37.591	ID:3	[INFO: CRYPTO    ] AESGCM 64bytes clock ticks (x100): 17
