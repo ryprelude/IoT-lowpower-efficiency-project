@@ -1,6 +1,6 @@
 # Energy-Efficient Security in Low-Power IoT Networks
 
-## 📹 Demo Video
+##  Demo Video
 > 🔗 **[Watch Demo Video](URL_HERE)** ← To be updated after recording
 
 ---
@@ -226,7 +226,7 @@ sed -i 's/\r//' gradlew
 ## Team
 | Role | Member |
 |------|--------|
-| Environment setup + Simulation + Limitation analysis | Member 1 |
-| ASCON actual porting and measurement | Member 2 |
-| AES-GCM actual porting and measurement | Member 3 |
-| Visualization and README | Member 4 |
+| Environment setup + Simulation + Limitation analysis | YeongUngKim |
+| ASCON actual porting and measurement | GyeongCheolHwang |
+| AES-GCM actual porting and measurement | YeongJunKim |
+| Visualization and README | JaeHyungJun |
