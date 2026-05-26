@@ -1,7 +1,7 @@
 # Energy-Efficient Security in Low-Power IoT Networks
 
 ##  Demo Video
-> 🔗 **[Watch Demo Video](URL_HERE)** ← To be updated after recording
+> 🔗 https://youtu.be/BpkBcQrJ3DM
 
 ---
 
