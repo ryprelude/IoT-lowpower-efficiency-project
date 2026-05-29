@@ -66,7 +66,7 @@ def save_energy_bar(grouped):
     ax.text(
         0.5,
         -0.20,
-        "32B: ASCON host-timing calibrated; AES-GCM payload-linear estimate",
+        "32B values: Cooja host-timing calibrated, not direct energy-meter readings",
         ha="center",
         transform=ax.transAxes,
         fontsize=8,
@@ -103,7 +103,7 @@ def save_comparison(grouped):
     ax.text(
         0.5,
         -0.20,
-        "Open 32B markers indicate derived values, not direct energy-meter readings.",
+        "Open 32B markers indicate host-timing calibrated values.",
         ha="center",
         transform=ax.transAxes,
         fontsize=8,

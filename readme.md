@@ -76,7 +76,7 @@ Full implementations of ASCON and AES-GCM were ported and measured under the sam
 | ASCON | 32 bytes | 3.552 | 0.00468 |
 | ASCON | 64 bytes | 4.451 | 0.00587 |
 | AES-GCM | 16 bytes | 15.22 | 0.00250 |
-| AES-GCM | 32 bytes | 29.86 | 0.00491 |
+| AES-GCM | 32 bytes | 29.007 | 0.00477 |
 | AES-GCM | 64 bytes | 59.14 | 0.00974 |
 
 The 32-byte ASCON value was derived from an additional Cooja actual-implementation run using host-side elapsed time:
@@ -87,25 +87,32 @@ ASCON 32bytes host elapsed us (x10000): 15317
 ASCON 64bytes host elapsed us (x10000): 25111
 ```
 
-Because the original 16-byte and 64-byte ASCON energy values were recorded in `energy_mJ`, the 32-byte ASCON energy was calibrated between those two measured energy points using the host elapsed-time ratio. The AES-GCM 32-byte row is a payload-linear estimate because the original actual AES-GCM measurement source was not available in this repository.
+Because the original 16-byte and 64-byte energy values were recorded in `energy_mJ`, the 32-byte ASCON and AES-GCM energy values were calibrated between their existing 16-byte and 64-byte energy points using the host elapsed-time ratios.
+
+The AES-GCM 32-byte value was derived from an additional Cooja actual-implementation run using Contiki-NG's built-in AES-128 block driver:
+
+```text
+AESGCM 16bytes host elapsed us (x10000): 61561
+AESGCM 32bytes host elapsed us (x10000): 102058
+AESGCM 64bytes host elapsed us (x10000): 190564
+```
 
 ### Key Insight
 
 ```
 16 bytes: AES-GCM 0.00250mJ vs ASCON 0.00431mJ → AES-GCM saves 42%
-32 bytes: AES-GCM 0.00491mJ vs ASCON 0.00468mJ → ASCON saves 5%
+32 bytes: AES-GCM 0.00477mJ vs ASCON 0.00468mJ → ASCON saves 2%
 64 bytes: AES-GCM 0.00974mJ vs ASCON 0.00587mJ → ASCON saves 40%
 ```
 
 > As data size increases, ASCON's energy efficiency surpasses AES-GCM.
-> The 32-byte ASCON point is based on an actual Cooja implementation run with host-side timing calibration.
-> The 32-byte AES-GCM point is still an estimate, so the exact crossover should be rechecked when the original AES-GCM actual measurement code is restored.
+> The 32-byte ASCON and AES-GCM points are based on additional Cooja implementation runs with host-side timing calibration.
 
 ### Interpolation Note
 
-The line chart now includes a 32-byte intermediate point. The ASCON point is calibrated from a Cooja actual-implementation timing run, while the AES-GCM point remains a payload-linear estimate.
+The line chart now includes a 32-byte intermediate point. Both 32-byte points are calibrated from Cooja actual-implementation timing runs.
 
-Because cryptographic implementations can include block boundaries, padding, loop overhead, timer resolution effects, and packet fragmentation thresholds, the AES-GCM 32-byte value should still be treated as a follow-up measurement target rather than a fully verified result.
+Because cryptographic implementations can include block boundaries, padding, loop overhead, timer resolution effects, and packet fragmentation thresholds, the 32-byte values should still be interpreted as calibrated Cooja measurements rather than direct physical energy-meter readings.
 
 For follow-up validation, the simplified Cooja test also includes a 32-byte payload case and produced 24 ticks for ASCON and 9 ticks for AES-GCM.
 
@@ -203,12 +210,12 @@ Additional energy consumed
 ### Limitations
 - Actual ASCON implementation was impossible on MSP430 GCC 4.7.4 due to 64-bit constraints
 - The 32-byte ASCON actual point is host-timing calibrated rather than directly energy-metered
-- The 32-byte AES-GCM actual point is estimated because the original actual AES-GCM measurement code is not available in this repository
+- The 32-byte AES-GCM actual point is host-timing calibrated rather than directly energy-metered
 - Timer precision limitations in the Cooja simulator
 - Validation on real hardware (ARM Cortex-M) is required
 
 ### Future Directions
-- Re-measure full AES-GCM implementation with 32-byte payloads
+- Re-measure full ASCON and AES-GCM implementations on physical devices with 32-byte payloads
 - Re-measurement on ARM Cortex-M based real devices
 - Additional verification with data sizes beyond 128 bytes
 - Energy comparison of DTLS handshake combined with each algorithm

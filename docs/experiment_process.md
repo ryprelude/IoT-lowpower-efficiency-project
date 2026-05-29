@@ -168,10 +168,16 @@ ASCON 64bytes host elapsed us (x10000): 25111
 | Data Size | CPU ticks | Energy (mJ) |
 |-----------|-----------|-------------|
 | 16 bytes | 15.22 | 0.00250 |
-| 32 bytes | 29.86 | 0.00491 |
+| 32 bytes | 29.007 | 0.00477 |
 | 64 bytes | 59.14 | 0.00974 |
 
-The 32-byte AES-GCM row is a payload-linear estimate because the original actual AES-GCM measurement source was not available in this repository.
+The 32-byte AES-GCM value was calibrated from the following Cooja actual-implementation host timing result using Contiki-NG's built-in AES-128 block driver:
+
+```text
+AESGCM 16bytes host elapsed us (x10000): 61561
+AESGCM 32bytes host elapsed us (x10000): 102058
+AESGCM 64bytes host elapsed us (x10000): 190564
+```
 
 ---
 
@@ -204,11 +210,11 @@ python visualization/visualize.py
 
 ### Energy Efficiency Crossover Point
 - 16 bytes: AES-GCM saves 42% energy
-- 32 bytes: ASCON saves about 5% energy based on the calibrated ASCON point and estimated AES-GCM point
+- 32 bytes: ASCON saves about 2% energy based on calibrated ASCON and AES-GCM points
 - 64 bytes: ASCON saves 40% energy
 - The line now includes a 32-byte intermediate point
 - The ASCON 32-byte value is based on an actual Cooja implementation timing run
-- The AES-GCM 32-byte value should be validated with the original actual measurement code
+- The AES-GCM 32-byte value is based on an additional Cooja host-timing run
 
 ### Network Layer Insight
 - AES-GCM block padding → triggers IEEE 802.15.4 fragmentation
@@ -253,4 +259,14 @@ ASCON 64bytes host elapsed us (x10000): 25111
 
 The 32-byte ASCON energy value was calibrated between the existing 16-byte and 64-byte ASCON energy measurements using the host elapsed-time ratio.
 
-The AES-GCM 32-byte actual point remains a payload-linear estimate until the original AES-GCM actual measurement source is restored and rerun.
+### Actual AES-GCM Host Timing Result
+
+Observed Cooja log lines:
+
+```text
+AESGCM 16bytes host elapsed us (x10000): 61561
+AESGCM 32bytes host elapsed us (x10000): 102058
+AESGCM 64bytes host elapsed us (x10000): 190564
+```
+
+The 32-byte AES-GCM energy value was calibrated between the existing 16-byte and 64-byte AES-GCM energy measurements using the host elapsed-time ratio.
