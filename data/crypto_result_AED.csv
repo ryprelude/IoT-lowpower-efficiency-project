@@ -1,3 +1,4 @@
 algorithm,  data_size,  cpu_ticks,  energy_mJ
 AES-GCM,    16,         15.22,      0.00250
+AES-GCM,    32,         29.86,      0.00491
 AES-GCM,    64,         59.14,      0.00974

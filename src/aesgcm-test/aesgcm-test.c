@@ -32,6 +32,7 @@ static void aesgcm_encrypt(const uint8_t *key, const uint8_t *msg, int mlen, uin
 }
 
 static uint8_t data_16[16] = "SensorData16Byte";
+static uint8_t data_32[32] = "SensorData32BytesSensorData32By!";
 static uint8_t data_64[64] = "SensorData64BytesSensorData64BytesSensorData64BytesSensorData64!";
 static uint8_t key[16]     = "SecretKey1234567";
 static uint8_t out[80];
@@ -56,6 +57,13 @@ PROCESS_THREAD(aesgcm_test_process, ev, data)
   }
   t1 = clock_time();
   LOG_INFO("AESGCM 16bytes clock ticks (x%d): %lu\n", REPEAT, (unsigned long)(t1-t0));
+
+  t0 = clock_time();
+  for(i = 0; i < REPEAT; i++) {
+    aesgcm_encrypt(key, data_32, 32, out);
+  }
+  t1 = clock_time();
+  LOG_INFO("AESGCM 32bytes clock ticks (x%d): %lu\n", REPEAT, (unsigned long)(t1-t0));
 
   t0 = clock_time();
   for(i = 0; i < REPEAT; i++) {

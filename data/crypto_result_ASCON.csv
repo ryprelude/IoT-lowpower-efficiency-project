@@ -1,3 +1,4 @@
 algorithm, data_size, cpu_ticks, energy_mJ
 ASCON, 16, 3.271, 0.00431
+ASCON, 32, 3.552, 0.00468
 ASCON, 64, 4.451, 0.00587

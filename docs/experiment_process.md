@@ -119,12 +119,15 @@ static void ascon_encrypt(const uint8_t *key, const uint8_t *msg,
 | Algorithm | Data Size | clock ticks (x100) |
 |-----------|-----------|---------------------|
 | ASCON (simplified) | 16 bytes | 12 ticks |
+| ASCON (simplified) | 32 bytes | 24 ticks |
 | ASCON (simplified) | 64 bytes | 49 ticks |
 | AES-GCM (simplified) | 16 bytes | 4 ticks |
+| AES-GCM (simplified) | 32 bytes | 9 ticks |
 | AES-GCM (simplified) | 64 bytes | 17 ticks |
 
 > AES-GCM appeared faster in the simplified implementation.
 > This does not reflect the actual algorithmic characteristics.
+> The 32-byte payload values were measured in Cooja using the updated Sky mote test.
 
 ---
 
@@ -140,7 +143,16 @@ static void ascon_encrypt(const uint8_t *key, const uint8_t *msg,
 | Data Size | CPU ticks | Energy (mJ) |
 |-----------|-----------|-------------|
 | 16 bytes | 3.271 | 0.00431 |
+| 32 bytes | 3.552 | 0.00468 |
 | 64 bytes | 4.451 | 0.00587 |
+
+The 32-byte ASCON value was calibrated from the following Cooja actual-implementation host timing result:
+
+```text
+ASCON 16bytes host elapsed us (x10000): 12249
+ASCON 32bytes host elapsed us (x10000): 15317
+ASCON 64bytes host elapsed us (x10000): 25111
+```
 
 ---
 
@@ -156,7 +168,10 @@ static void ascon_encrypt(const uint8_t *key, const uint8_t *msg,
 | Data Size | CPU ticks | Energy (mJ) |
 |-----------|-----------|-------------|
 | 16 bytes | 15.22 | 0.00250 |
+| 32 bytes | 29.86 | 0.00491 |
 | 64 bytes | 59.14 | 0.00974 |
+
+The 32-byte AES-GCM row is a payload-linear estimate because the original actual AES-GCM measurement source was not available in this repository.
 
 ---
 
@@ -189,10 +204,53 @@ python visualization/visualize.py
 
 ### Energy Efficiency Crossover Point
 - 16 bytes: AES-GCM saves 42% energy
+- 32 bytes: ASCON saves about 5% energy based on the calibrated ASCON point and estimated AES-GCM point
 - 64 bytes: ASCON saves 40% energy
-- For real-world IoT data (32 bytes or more), ASCON is more suitable
+- The line now includes a 32-byte intermediate point
+- The ASCON 32-byte value is based on an actual Cooja implementation timing run
+- The AES-GCM 32-byte value should be validated with the original actual measurement code
 
 ### Network Layer Insight
 - AES-GCM block padding → triggers IEEE 802.15.4 fragmentation
 - Fragmentation → retransmission → additional energy consumption
 - ASCON streaming approach → no padding → minimal fragmentation
+
+---
+
+## 8. Follow-up Experiment: 32-byte Payload
+
+### Motivation
+
+During presentation feedback, the line chart between 16-byte and 64-byte payloads raised an important question: whether a 32-byte point was actually measured or only visually inferred from the line.
+
+The simplified Cooja test now contains measured values for 16-byte, 32-byte, and 64-byte payloads. The actual ASCON implementation was also rerun with a 32-byte payload using host-side elapsed time because `RTIMER_NOW()` stayed at zero in the Cooja native mote environment.
+
+### Updated Test Target
+
+The test programs include a new 32-byte payload case:
+
+- `src/ascon-test/ascon-test.c`
+- `src/aesgcm-test/aesgcm-test.c`
+
+Observed Cooja log lines:
+
+```text
+ASCON 32bytes clock ticks (x100): 24
+AESGCM 32bytes clock ticks (x100): 9
+```
+
+The observed 32-byte rows were added to `data/crypto_result.csv`, and the simplified result figures can be regenerated from that CSV.
+
+### Actual ASCON Host Timing Result
+
+Observed Cooja log lines:
+
+```text
+ASCON 16bytes host elapsed us (x10000): 12249
+ASCON 32bytes host elapsed us (x10000): 15317
+ASCON 64bytes host elapsed us (x10000): 25111
+```
+
+The 32-byte ASCON energy value was calibrated between the existing 16-byte and 64-byte ASCON energy measurements using the host elapsed-time ratio.
+
+The AES-GCM 32-byte actual point remains a payload-linear estimate until the original AES-GCM actual measurement source is restored and rerun.
